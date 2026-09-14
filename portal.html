@@ -463,7 +463,7 @@
 // ============================================================
 // CONFIGURAÇÃO
 // ============================================================
-const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxFxp1YEJTwv7tJkfhbLzVdGQlxWcZhYLni6NUV6Et3OYfjhDKcrDzaHjv2udKtQh8dsQ/exec";
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbw8xk274Ejf-P_5lGnvi0a509LLasVz5NHONXYp5o3PHGag2zgcsIOi6k7NPUf4r3NPyw/exec";
 
 // ============================================================
 // BANCO DE ALIMENTOS (mesmos valores de referência do Apps Script)
@@ -553,6 +553,7 @@ async function buscarPlano() {
     document.getElementById('tela-codigo').style.display = 'none';
     document.getElementById('conteudo-principal').style.display = 'block';
   } catch (erro) {
+    console.error('Erro ao buscar/renderizar plano:', erro);
     msg.style.color = '#E58B7B';
     msg.textContent = 'Não deu pra buscar seu plano agora. Tente de novo em instantes.';
   }
