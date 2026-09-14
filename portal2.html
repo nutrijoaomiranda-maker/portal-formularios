@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shark Squad — Seu Plano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #0B1E33;
+    --bg-panel: #12233B;
+    --bg-panel-alt: #16304F;
+    --accent: #D9A441;
+    --accent-soft: #E8C77A;
+    --text-primary: #F3F1EA;
+    --text-muted: #93A6BC;
+    --border: rgba(255,255,255,0.09);
+    --font-display: 'Oswald', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: linear-gradient(180deg, #0B1E33 0%, #091829 100%);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    font-size: 1.05rem;
+  }
+  .wordmark span { color: var(--accent); }
+
+  header {
+    padding: 22px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ---------- TELA DE CÓDIGO ---------- */
+  #tela-codigo {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  #tela-codigo h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 2rem;
+    margin: 0 0 8px;
+  }
+
+  #tela-codigo p {
+    color: var(--text-muted);
+    margin: 0 0 28px;
+    max-width: 420px;
+  }
+
+  .campo-codigo {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  #input-codigo {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: var(--font-body);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  #input-codigo:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .btn-primario {
+    background: var(--accent);
+    color: #0B1E33;
+    border: none;
+    padding: 14px 22px;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .btn-primario:hover { background: var(--accent-soft); }
+  .btn-primario:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+
+  #mensagem-codigo {
+    margin-top: 14px;
+    color: #E58B7B;
+    font-size: 0.9rem;
+    min-height: 1.2em;
+  }
+
+  /* ---------- CONTEÚDO PRINCIPAL ---------- */
+  #conteudo-principal { display: none; }
+
+  .saudacao {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .saudacao .accent { color: var(--accent); }
+
+  .subtitulo {
+    color: var(--text-muted);
+    margin: 0 0 32px;
+  }
+
+  .resumo-calorico {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    padding: 24px 0 36px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+
+  .stat { }
+  .stat .valor {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat.principal .valor { font-size: 3rem; }
+  .stat .rotulo {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 6px;
+  }
+
+  h2.secao-titulo {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin: 0 0 18px;
+    padding-top: 8px;
+  }
+
+  /* ---------- REFEIÇÕES ---------- */
+  .refeicao {
+    display: flex;
+    gap: 18px;
+    border-left: 3px solid var(--accent);
+    background: var(--bg-panel);
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .refeicao .icone {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    margin-top: 2px;
+    color: var(--accent);
+  }
+  .refeicao .icone svg { width: 100%; height: 100%; }
+
+  .refeicao .corpo { flex: 1; min-width: 0; }
+
+  .refeicao .nome-refeicao {
+    font-weight: 600;
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+  }
+
+  .item-alimento {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    flex-wrap: wrap;
+  }
+  .item-alimento + .item-alimento { border-top: 1px solid var(--border); }
+
+  .item-alimento .desc { color: var(--text-primary); }
+  .item-alimento .desc .gramas { color: var(--accent-soft); font-weight: 600; }
+
+  .btn-trocar {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn-trocar:hover { border-color: var(--accent); color: var(--accent-soft); }
+
+  .opcoes-troca {
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 0 4px;
+    width: 100%;
+  }
+  .opcoes-troca.aberto { display: flex; }
+
+  .opcao-pill {
+    background: var(--bg-panel-alt);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 0.82rem;
+    padding: 7px 13px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: var(--font-body);
+  }
+  .opcao-pill:hover { border-color: var(--accent); }
+  .opcao-pill.selecionada { background: var(--accent); color: #0B1E33; border-color: var(--accent); font-weight: 600; }
+
+  .vegetais-nota {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* ---------- SEÇÕES EXPANSÍVEIS ---------- */
+  .painel-expansivel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .painel-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .painel-cabecalho h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .painel-seta { color: var(--accent); transition: transform 0.2s ease; font-size: 1.1rem; }
+  .painel-expansivel.aberto .painel-seta { transform: rotate(180deg); }
+
+  .painel-corpo {
+    display: none;
+    padding: 0 22px 22px;
+    color: var(--text-muted);
+  }
+  .painel-expansivel.aberto .painel-corpo { display: block; }
+  .painel-corpo p { margin: 0 0 12px; }
+  .painel-corpo ul { margin: 0 0 12px; padding-left: 20px; }
+  .painel-corpo li { margin-bottom: 6px; }
+
+  /* Três Caminhos */
+  .caminhos-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .caminho-tab {
+    background: var(--bg-panel-alt);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 9px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+  }
+  .caminho-tab.ativo { background: var(--accent); color: #0B1E33; border-color: var(--accent); font-weight: 600; }
+  .caminho-conteudo { display: none; }
+  .caminho-conteudo.ativo { display: block; }
+
+  /* Hidratação */
+  .meta-hidratacao {
+    font-family: var(--font-display);
+    color: var(--accent);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .semana-hidratacao {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .dia-check {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .dia-check span { font-size: 0.75rem; color: var(--text-muted); }
+  .dia-check input {
+    width: 26px;
+    height: 26px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    padding: 30px 20px;
+  }
+
+  @media (max-width: 480px) {
+    .resumo-calorico { gap: 20px; }
+    .stat .valor { font-size: 2rem; }
+    .stat.principal .valor { font-size: 2.4rem; }
+    .refeicao { flex-direction: column; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wordmark">SHARK<span>SQUAD</span></div>
+</header>
+
+<main>
+
+  <!-- TELA DE CÓDIGO -->
+  <section id="tela-codigo">
+    <h1>Seu plano está pronto.</h1>
+    <p>Digite o código que você recebeu para ver sua prescrição completa.</p>
+    <div class="campo-codigo">
+      <input type="text" id="input-codigo" placeholder="Ex: 5Z655M" maxlength="6" autocapitalize="characters">
+      <button class="btn-primario" onclick="buscarPlano()">Ver meu plano</button>
+    </div>
+    <div id="mensagem-codigo"></div>
+  </section>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <section id="conteudo-principal">
+
+    <p class="saudacao">Olá, <span class="accent" id="nome-cliente"></span></p>
+    <p class="subtitulo">Aqui está o seu plano, calculado sob medida.</p>
+
+    <div class="resumo-calorico">
+      <div class="stat principal">
+        <div class="valor" id="valor-meta">—</div>
+        <div class="rotulo">Meta calórica diária</div>
+      </div>
+      <div class="stat">
+        <div class="valor" id="valor-tmb">—</div>
+        <div class="rotulo">Taxa metabólica basal</div>
+      </div>
+      <div class="stat">
+        <div class="valor" id="valor-get">—</div>
+        <div class="rotulo">Gasto energético total</div>
+      </div>
+    </div>
+
+    <h2 class="secao-titulo">Suas refeições</h2>
+    <div id="lista-refeicoes"></div>
+
+    <h2 class="secao-titulo" style="margin-top:36px;">Mais para você</h2>
+
+    <!-- OS TRÊS CAMINHOS -->
+    <div class="painel-expansivel" id="painel-caminhos">
+      <div class="painel-cabecalho" onclick="alternarPainel('painel-caminhos')">
+        <h3>Os Três Caminhos</h3>
+        <span class="painel-seta">▾</span>
+      </div>
+      <div class="painel-corpo">
+        <div class="caminhos-tabs">
+          <button class="caminho-tab ativo" onclick="mostrarCaminho(this, 'a')">Caminho A</button>
+          <button class="caminho-tab" onclick="mostrarCaminho(this, 'b')">Caminho B</button>
+          <button class="caminho-tab" onclick="mostrarCaminho(this, 'c')">Caminho C</button>
+        </div>
+        <div class="caminho-conteudo ativo" data-caminho="a">
+          <p><em>Conteúdo do Caminho A — substitua este texto pelo material que você já usa em "Os Três Caminhos".</em></p>
+        </div>
+        <div class="caminho-conteudo" data-caminho="b">
+          <p><em>Conteúdo do Caminho B — substitua este texto pelo material que você já usa em "Os Três Caminhos".</em></p>
+        </div>
+        <div class="caminho-conteudo" data-caminho="c">
+          <p><em>Conteúdo do Caminho C — substitua este texto pelo material que você já usa em "Os Três Caminhos".</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HIDRATAÇÃO -->
+    <div class="painel-expansivel" id="painel-hidratacao">
+      <div class="painel-cabecalho" onclick="alternarPainel('painel-hidratacao')">
+        <h3>Guia de hidratação</h3>
+        <span class="painel-seta">▾</span>
+      </div>
+      <div class="painel-corpo">
+        <div class="meta-hidratacao" id="meta-hidratacao-valor">—</div>
+        <p>Meta diária de água, calculada a partir do seu peso (35ml por kg).</p>
+        <p>Divida ao longo do dia — um copo ao acordar, um antes de cada refeição e o resto entre elas. Em dias muito quentes ou de treino, beba um pouco mais.</p>
+        <p style="color:var(--text-primary); font-weight:600; margin-top:18px;">Marque os dias em que você bateu sua meta:</p>
+        <div class="semana-hidratacao" id="semana-hidratacao"></div>
+      </div>
+    </div>
+
+    <!-- CHURRASCO / HAPPY HOUR -->
+    <div class="painel-expansivel" id="painel-churrasco">
+      <div class="painel-cabecalho" onclick="alternarPainel('painel-churrasco')">
+        <h3>Sobrevivendo ao churrasco e ao happy hour</h3>
+        <span class="painel-seta">▾</span>
+      </div>
+      <div class="painel-corpo">
+        <p>Você não precisa recusar o convite — só jogar mais esperto.</p>
+        <ul>
+          <li>Priorize carnes magras (patinho, coxão mole, frango) e vá com calma na linguiça e na costela.</li>
+          <li>Encha o prato de salada e vegetais antes de tudo — eles ocupam espaço sem pesar na conta calórica.</li>
+          <li>Se for beber, prefira destilados com água/soda a coquetéis e cervejas em excesso — e alterne com água entre um copo e outro.</li>
+          <li>Coma devagar e converse entre uma garfada e outra — o corpo demora a avisar que já está satisfeito.</li>
+          <li>No dia seguinte, volte direto pro seu plano — um evento fora da rotina não desfaz o restante da semana.</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>Shark Squad</footer>
+
+<script>
+// ============================================================
+// CONFIGURAÇÃO
+// ============================================================
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxFxp1YEJTwv7tJkfhbLzVdGQlxWcZhYLni6NUV6Et3OYfjhDKcrDzaHjv2udKtQh8dsQ/exec";
+
+// ============================================================
+// BANCO DE ALIMENTOS (mesmos valores de referência do Apps Script)
+// Usado só para RECALCULAR gramas quando o cliente troca um item.
+// ============================================================
+const CARBO_GRANDE = {
+  'Arroz + Feijão (padrão)': { kcalPor100g: null, especial: 'comboArrozFeijao' },
+  'Somente arroz': { kcalPor100g: 128 },
+  'Batata inglesa': { kcalPor100g: 52 },
+  'Batata doce': { kcalPor100g: 77 },
+  'Macarrão': { kcalPor100g: 150 },
+  'Purê de batata': { kcalPor100g: 65 },
+  'Mandioca': { kcalPor100g: 125 },
+  'Arroz integral': { kcalPor100g: 124 },
+  'Cuscuz de milho': { kcalPor100g: 112 }
+};
+
+const PROTEINA_GRANDE = {
+  'Frango grelhado': { kcalPor100g: 165 },
+  'Bife grelhado': { kcalPor100g: 230 },
+  'Carne moída': { kcalPor100g: 230 },
+  'Peixe branco grelhado': { kcalPor100g: 128 },
+  'Ovo cozido + azeite': { kcalPor100g: (180 / 105) * 100 }
+};
+
+const CARBO_PERIFERICO = {
+  'Pão francês': { kcalPor100g: (150 / 50) * 100 },
+  'Pão de forma': { kcalPor100g: (130 / 50) * 100 },
+  'Pão integral': { kcalPor100g: (120 / 50) * 100 },
+  'Tapioca': { kcalPor100g: (130 / 60) * 100 },
+  'Cuscuz de milho': { kcalPor100g: 112 }
+};
+
+const RECHEIO_PERIFERICO = {
+  'Ovo mexido': { kcalPor100g: 165 },
+  'Queijo muçarela': { kcalPor100g: (65 / 20) * 100 },
+  'Queijo prato': { kcalPor100g: (70 / 20) * 100 },
+  'Requeijão light': { kcalPor100g: (35 / 20) * 100 }
+};
+
+const FRUTAS = {
+  'Banana': 90, 'Maçã': 56, 'Manga': 60, 'Uva': 53, 'Pera': 53, 'Kiwi': 51,
+  'Abacaxi': 48, 'Laranja': 45, 'Mamão': 40, 'Tangerina': 40, 'Melancia': 33,
+  'Melão': 29, 'Morango': 30
+};
+
+const AVEIA_OU_LEITE = {
+  'Aveia em flocos': { kcalPor100g: (117 / 30) * 100 },
+  'Leite desnatado': { kcalPor100g: 35 }
+};
+
+const KCAL_ARROZ = 128, KCAL_FEIJAO = 76;
+
+const ICONES = {
+  sol: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>',
+  maca: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 8c-3.5 0-6 2.5-6 6.2 0 3.4 2.4 6.3 4.7 6.3.9 0 1.4-.4 2.3-.4.9 0 1.4.4 2.3.4 2.2 0 4.7-3.1 4.7-6.5C20 10.4 17.4 8 14 8c-.7 0-1.3.2-2 .5-.7-.3-1.3-.5-2-.5z"/><path d="M12 8c0-2 1-3.5 2.5-4"/></svg>',
+  prato: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>',
+  xicara: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5c0 1-1 1-1 2s1 1 1 2M12 3.5c0 1-1 1-1 2s1 1 1 2"/></svg>',
+  lua: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>'
+};
+
+let planoAtual = null;
+
+// ============================================================
+// BUSCA DO PLANO
+// ============================================================
+async function buscarPlano() {
+  const codigo = document.getElementById('input-codigo').value.trim().toUpperCase();
+  const msg = document.getElementById('mensagem-codigo');
+  if (!codigo) { msg.textContent = 'Digite seu código.'; return; }
+
+  msg.style.color = 'var(--text-muted)';
+  msg.textContent = 'Buscando seu plano...';
+
+  try {
+    const resp = await fetch(URL_SCRIPT + '?codigo=' + encodeURIComponent(codigo));
+    const dados = await resp.json();
+
+    if (!dados.encontrado) {
+      msg.style.color = '#E58B7B';
+      msg.textContent = 'Código não encontrado. Confira e tente de novo.';
+      return;
+    }
+
+    planoAtual = dados;
+    renderizarPlano(dados);
+    document.getElementById('tela-codigo').style.display = 'none';
+    document.getElementById('conteudo-principal').style.display = 'block';
+  } catch (erro) {
+    msg.style.color = '#E58B7B';
+    msg.textContent = 'Não deu pra buscar seu plano agora. Tente de novo em instantes.';
+  }
+}
+
+// ============================================================
+// RENDERIZAÇÃO
+// ============================================================
+function renderizarPlano(dados) {
+  document.getElementById('nome-cliente').textContent = (dados.nome || '').split(' ')[0];
+  document.getElementById('valor-meta').textContent = Math.round(dados.metaCalorica) + ' kcal';
+  document.getElementById('valor-tmb').textContent = Math.round(dados.tmb);
+  document.getElementById('valor-get').textContent = Math.round(dados.get);
+
+  const p = dados.prescricao;
+  const lista = document.getElementById('lista-refeicoes');
+  lista.innerHTML = '';
+
+  lista.appendChild(criarRefeicaoGrande('Almoço', ICONES.prato, p.almoco, 'almoco'));
+  lista.appendChild(criarRefeicaoPeriferica('Café da manhã', ICONES.sol, p.cafeDaManha, 'cafeDaManha'));
+  lista.appendChild(criarLancheManha('Lanche da manhã', ICONES.maca, p.lancheDaManha));
+  lista.appendChild(criarRefeicaoPeriferica('Lanche da tarde', ICONES.xicara, p.lancheDaTarde, 'lancheDaTarde'));
+  lista.appendChild(criarRefeicaoGrande('Janta', ICONES.lua, p.janta, 'janta'));
+
+  // Meta de hidratação: 35ml por kg de peso
+  const metaMl = Math.round((dados.peso || 70) * 35);
+  document.getElementById('meta-hidratacao-valor').textContent =
+    (metaMl / 1000).toFixed(1).replace('.', ',') + ' litros por dia';
+  montarSemanaHidratacao();
+}
+
+function criarRefeicaoGrande(titulo, icone, dadosRefeicao, idBase) {
+  const div = document.createElement('div');
+  div.className = 'refeicao';
+
+  const totalKcalCarbo = (dadosRefeicao.carboidrato.arrozG * KCAL_ARROZ / 100)
+    + (dadosRefeicao.carboidrato.feijaoG * KCAL_FEIJAO / 100);
+  const proteinaInfo = PROTEINA_GRANDE[dadosRefeicao.proteina.item] || { kcalPor100g: 165 };
+  const totalKcalProteina = dadosRefeicao.proteina.gramas * proteinaInfo.kcalPor100g / 100;
+
+  div.innerHTML = `
+    <div class="icone">${icone}</div>
+    <div class="corpo">
+      <p class="nome-refeicao">${titulo}</p>
+      <div class="item-alimento" data-tipo="carbo-grande" data-id="${idBase}" data-kcal="${totalKcalCarbo}">
+        <span class="desc" id="desc-${idBase}-carbo">Arroz branco <span class="gramas">${dadosRefeicao.carboidrato.arrozG}g</span> + Feijão carioca <span class="gramas">${dadosRefeicao.carboidrato.feijaoG}g</span></span>
+        <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-carbo')">Trocar</button>
+      </div>
+      <div class="opcoes-troca" id="opcoes-${idBase}-carbo"></div>
+
+      <div class="item-alimento" data-tipo="proteina-grande" data-id="${idBase}" data-kcal="${totalKcalProteina}">
+        <span class="desc" id="desc-${idBase}-proteina">${dadosRefeicao.proteina.item} <span class="gramas">${dadosRefeicao.proteina.gramas}g</span></span>
+        <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-proteina')">Trocar</button>
+      </div>
+      <div class="opcoes-troca" id="opcoes-${idBase}-proteina"></div>
+
+      <div class="vegetais-nota">+ Vegetais à vontade (Grupo A e B)</div>
+    </div>
+  `;
+
+  montarOpcoes(idBase + '-carbo', CARBO_GRANDE, dadosRefeicao.carboidrato.item, totalKcalCarbo, 'carbo-grande', idBase);
+  montarOpcoes(idBase + '-proteina', PROTEINA_GRANDE, dadosRefeicao.proteina.item, totalKcalProteina, 'proteina-grande', idBase);
+
+  return div;
+}
+
+function criarRefeicaoPeriferica(titulo, icone, dadosRefeicao, idBase) {
+  const div = document.createElement('div');
+  div.className = 'refeicao';
+
+  const carboInfo = CARBO_PERIFERICO[dadosRefeicao.carboidrato.item] || { kcalPor100g: 300 };
+  const totalKcalCarbo = dadosRefeicao.carboidrato.gramas * carboInfo.kcalPor100g / 100;
+  const recheioInfo = RECHEIO_PERIFERICO[dadosRefeicao.recheio.item] || { kcalPor100g: 165 };
+  const totalKcalRecheio = dadosRefeicao.recheio.gramas * recheioInfo.kcalPor100g / 100;
+
+  div.innerHTML = `
+    <div class="icone">${icone}</div>
+    <div class="corpo">
+      <p class="nome-refeicao">${titulo}</p>
+      <div class="item-alimento" data-tipo="carbo-periferico" data-id="${idBase}" data-kcal="${totalKcalCarbo}">
+        <span class="desc" id="desc-${idBase}-carbo">${dadosRefeicao.carboidrato.item} <span class="gramas">${dadosRefeicao.carboidrato.gramas}g</span></span>
+        <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-carbo')">Trocar</button>
+      </div>
+      <div class="opcoes-troca" id="opcoes-${idBase}-carbo"></div>
+
+      <div class="item-alimento" data-tipo="recheio" data-id="${idBase}" data-kcal="${totalKcalRecheio}">
+        <span class="desc" id="desc-${idBase}-recheio">${dadosRefeicao.recheio.item} <span class="gramas">${dadosRefeicao.recheio.gramas}g</span></span>
+        <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-recheio')">Trocar</button>
+      </div>
+      <div class="opcoes-troca" id="opcoes-${idBase}-recheio"></div>
+    </div>
+  `;
+
+  montarOpcoes(idBase + '-carbo', CARBO_PERIFERICO, dadosRefeicao.carboidrato.item, totalKcalCarbo, 'carbo-periferico', idBase);
+  montarOpcoes(idBase + '-recheio', RECHEIO_PERIFERICO, dadosRefeicao.recheio.item, totalKcalRecheio, 'recheio', idBase);
+
+  return div;
+}
+
+function criarLancheManha(titulo, icone, dadosRefeicao) {
+  const div = document.createElement('div');
+  div.className = 'refeicao';
+  const idBase = 'lancheManha';
+
+  const kcalFrutaBase = FRUTAS[dadosRefeicao.fruta.item] || 90;
+  const totalKcalFruta = dadosRefeicao.fruta.gramas * kcalFrutaBase / 100;
+  const aveiaInfo = AVEIA_OU_LEITE[dadosRefeicao.aveia.item] || AVEIA_OU_LEITE['Aveia em flocos'];
+  const totalKcalAveia = dadosRefeicao.aveia.gramas * aveiaInfo.kcalPor100g / 100;
+
+  div.innerHTML = `
+    <div class="icone">${icone}</div>
+    <div class="corpo">
+      <p class="nome-refeicao">${titulo}</p>
+      <div class="item-alimento" data-tipo="fruta" data-id="${idBase}" data-kcal="${totalKcalFruta}">
+        <span class="desc" id="desc-${idBase}-fruta">${dadosRefeicao.fruta.item} <span class="gramas">${dadosRefeicao.fruta.gramas}g</span></span>
+        <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-fruta')">Trocar</button>
+      </div>
+      <div class="opcoes-troca" id="opcoes-${idBase}-fruta"></div>
+
+      <div class="item-alimento" data-tipo="aveia" data-id="${idBase}" data-kcal="${totalKcalAveia}">
+        <span class="desc" id="desc-${idBase}-aveia">${dadosRefeicao.aveia.item} <span class="gramas">${dadosRefeicao.aveia.gramas}g</span></span>
+        <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-aveia')">Trocar</button>
+      </div>
+      <div class="opcoes-troca" id="opcoes-${idBase}-aveia"></div>
+    </div>
+  `;
+
+  const bancoFrutas = {};
+  Object.keys(FRUTAS).forEach(f => { bancoFrutas[f] = { kcalPor100g: FRUTAS[f] }; });
+
+  montarOpcoes(idBase + '-fruta', bancoFrutas, dadosRefeicao.fruta.item, totalKcalFruta, 'fruta', idBase);
+  montarOpcoes(idBase + '-aveia', AVEIA_OU_LEITE, dadosRefeicao.aveia.item, totalKcalAveia, 'aveia', idBase);
+
+  return div;
+}
+
+// ============================================================
+// TROCA DE ITENS
+// ============================================================
+function montarOpcoes(chaveDom, banco, itemAtual, kcalAlvo, tipo, idBase) {
+  const container = document.getElementById('opcoes-' + chaveDom);
+  container.innerHTML = '';
+  Object.keys(banco).forEach(nomeItem => {
+    const pill = document.createElement('button');
+    pill.className = 'opcao-pill' + (nomeItem === itemAtual ? ' selecionada' : '');
+    pill.textContent = nomeItem;
+    pill.onclick = () => selecionarOpcao(chaveDom, nomeItem, banco, kcalAlvo, tipo, idBase);
+    container.appendChild(pill);
+  });
+}
+
+function alternarOpcoes(chaveDom) {
+  document.getElementById('opcoes-' + chaveDom).classList.toggle('aberto');
+}
+
+function selecionarOpcao(chaveDom, nomeItem, banco, kcalAlvo, tipo, idBase) {
+  const container = document.getElementById('opcoes-' + chaveDom);
+  Array.from(container.children).forEach(p => p.classList.toggle('selecionada', p.textContent === nomeItem));
+
+  const descEl = document.getElementById('desc-' + chaveDom);
+
+  if (tipo === 'carbo-grande' && nomeItem === 'Arroz + Feijão (padrão)') {
+    const kcalArrozAlvo = kcalAlvo * 0.62;
+    const kcalFeijaoAlvo = kcalAlvo * 0.38;
+    const arrozG = Math.round((kcalArrozAlvo / KCAL_ARROZ) * 100);
+    const feijaoG = Math.round((kcalFeijaoAlvo / KCAL_FEIJAO) * 100);
+    descEl.innerHTML = `Arroz branco <span class="gramas">${arrozG}g</span> + Feijão carioca <span class="gramas">${feijaoG}g</span>`;
+    return;
+  }
+
+  const info = banco[nomeItem];
+  const novaGramatura = Math.round((kcalAlvo / info.kcalPor100g) * 100);
+  descEl.innerHTML = `${nomeItem} <span class="gramas">${novaGramatura}g</span>`;
+}
+
+// ============================================================
+// PAINÉIS EXPANSÍVEIS / TRÊS CAMINHOS
+// ============================================================
+function alternarPainel(id) {
+  document.getElementById(id).classList.toggle('aberto');
+}
+
+function mostrarCaminho(botao, letra) {
+  document.querySelectorAll('.caminho-tab').forEach(t => t.classList.remove('ativo'));
+  botao.classList.add('ativo');
+  document.querySelectorAll('.caminho-conteudo').forEach(c => c.classList.remove('ativo'));
+  document.querySelector('.caminho-conteudo[data-caminho="' + letra + '"]').classList.add('ativo');
+}
+
+// ============================================================
+// HIDRATAÇÃO — CHECK SEMANAL (salvo localmente no navegador)
+// ============================================================
+function montarSemanaHidratacao() {
+  const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+  const container = document.getElementById('semana-hidratacao');
+  container.innerHTML = '';
+
+  const codigo = (planoAtual && planoAtual.nome) ? planoAtual.nome : 'padrao';
+  const chaveArmazenamento = 'hidratacao_' + codigo;
+  let salvo = {};
+  try { salvo = JSON.parse(localStorage.getItem(chaveArmazenamento)) || {}; } catch (e) { salvo = {}; }
+
+  dias.forEach((dia, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'dia-check';
+    const label = document.createElement('span');
+    label.textContent = dia;
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = !!salvo[i];
+    input.onchange = () => {
+      salvo[i] = input.checked;
+      localStorage.setItem(chaveArmazenamento, JSON.stringify(salvo));
+    };
+    wrapper.appendChild(input);
+    wrapper.appendChild(label);
+    container.appendChild(wrapper);
+  });
+}
+
+document.getElementById('input-codigo').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') buscarPlano();
+});
+</script>
+
+</body>
+</html>
