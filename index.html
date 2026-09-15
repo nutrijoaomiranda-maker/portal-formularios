@@ -333,6 +333,35 @@
     cursor: pointer;
   }
 
+  .semana-caminhos {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .dia-caminho {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .dia-caminho > span { font-size: 0.75rem; color: var(--text-muted); }
+  .dia-caminho-opcoes { display: flex; gap: 4px; }
+  .btn-letra-caminho {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-panel-alt);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-letra-caminho:hover { border-color: var(--accent); }
+  .btn-letra-caminho.selecionada { background: var(--accent); color: #0B1E33; border-color: var(--accent); }
+
   footer {
     text-align: center;
     color: var(--text-muted);
@@ -404,20 +433,17 @@
         <span class="painel-seta">▾</span>
       </div>
       <div class="painel-corpo">
-        <div class="caminhos-tabs">
-          <button class="caminho-tab ativo" onclick="mostrarCaminho(this, 'a')">Caminho A</button>
-          <button class="caminho-tab" onclick="mostrarCaminho(this, 'b')">Caminho B</button>
-          <button class="caminho-tab" onclick="mostrarCaminho(this, 'c')">Caminho C</button>
+        <p>Cada caminho é uma forma diferente de estruturar o seu dia alimentar. Leia as três opções abaixo e, no fim da semana, marque qual caminho você seguiu em cada dia.</p>
+        <div style="margin-bottom:18px;">
+          <p style="color:var(--text-primary); font-weight:600; margin-bottom:4px;">Caminho A</p>
+          <p style="margin-bottom:14px;"><em>Substitua este texto pela explicação real do Caminho A.</em></p>
+          <p style="color:var(--text-primary); font-weight:600; margin-bottom:4px;">Caminho B</p>
+          <p style="margin-bottom:14px;"><em>Substitua este texto pela explicação real do Caminho B.</em></p>
+          <p style="color:var(--text-primary); font-weight:600; margin-bottom:4px;">Caminho C</p>
+          <p style="margin-bottom:14px;"><em>Substitua este texto pela explicação real do Caminho C.</em></p>
         </div>
-        <div class="caminho-conteudo ativo" data-caminho="a">
-          <p><em>Conteúdo do Caminho A — substitua este texto pelo material que você já usa em "Os Três Caminhos".</em></p>
-        </div>
-        <div class="caminho-conteudo" data-caminho="b">
-          <p><em>Conteúdo do Caminho B — substitua este texto pelo material que você já usa em "Os Três Caminhos".</em></p>
-        </div>
-        <div class="caminho-conteudo" data-caminho="c">
-          <p><em>Conteúdo do Caminho C — substitua este texto pelo material que você já usa em "Os Três Caminhos".</em></p>
-        </div>
+        <p style="color:var(--text-primary); font-weight:600; margin-top:8px;">Marque qual caminho você seguiu em cada dia:</p>
+        <div class="semana-caminhos" id="semana-caminhos"></div>
       </div>
     </div>
 
@@ -585,6 +611,7 @@ function renderizarPlano(dados) {
   document.getElementById('meta-hidratacao-valor').textContent =
     (metaMl / 1000).toFixed(1).replace('.', ',') + ' litros por dia';
   montarSemanaHidratacao();
+  montarSemanaCaminhos();
 }
 
 function criarRefeicaoGrande(titulo, icone, dadosRefeicao, idBase) {
@@ -763,10 +790,47 @@ function alternarPainel(id) {
 }
 
 function mostrarCaminho(botao, letra) {
-  document.querySelectorAll('.caminho-tab').forEach(t => t.classList.remove('ativo'));
-  botao.classList.add('ativo');
-  document.querySelectorAll('.caminho-conteudo').forEach(c => c.classList.remove('ativo'));
-  document.querySelector('.caminho-conteudo[data-caminho="' + letra + '"]').classList.add('ativo');
+  // Mantido apenas por compatibilidade — não é mais usado pela interface atual.
+}
+
+function montarSemanaCaminhos() {
+  const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+  const letras = ['A', 'B', 'C'];
+  const container = document.getElementById('semana-caminhos');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const codigo = (planoAtual && planoAtual.nome) ? planoAtual.nome : 'padrao';
+  const chaveArmazenamento = 'caminhos_' + codigo;
+  let salvo = {};
+  try { salvo = JSON.parse(localStorage.getItem(chaveArmazenamento)) || {}; } catch (e) { salvo = {}; }
+
+  dias.forEach((dia, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'dia-caminho';
+
+    const label = document.createElement('span');
+    label.textContent = dia;
+    wrapper.appendChild(label);
+
+    const opcoes = document.createElement('div');
+    opcoes.className = 'dia-caminho-opcoes';
+
+    letras.forEach(letra => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-letra-caminho' + (salvo[i] === letra ? ' selecionada' : '');
+      btn.textContent = letra;
+      btn.onclick = () => {
+        salvo[i] = (salvo[i] === letra) ? null : letra;
+        localStorage.setItem(chaveArmazenamento, JSON.stringify(salvo));
+        montarSemanaCaminhos();
+      };
+      opcoes.appendChild(btn);
+    });
+
+    wrapper.appendChild(opcoes);
+    container.appendChild(wrapper);
+  });
 }
 
 // ============================================================
