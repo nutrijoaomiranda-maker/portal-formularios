@@ -578,6 +578,8 @@ function renderizarPlano(dados) {
   lista.appendChild(criarRefeicaoPeriferica('Lanche da tarde', ICONES.xicara, p.lancheDaTarde, 'lancheDaTarde'));
   lista.appendChild(criarRefeicaoGrande('Janta', ICONES.lua, p.janta, 'janta'));
 
+  inicializarOpcoes(p);
+
   // Meta de hidratação: 35ml por kg de peso
   const metaMl = Math.round((dados.peso || 70) * 35);
   document.getElementById('meta-hidratacao-valor').textContent =
@@ -614,9 +616,6 @@ function criarRefeicaoGrande(titulo, icone, dadosRefeicao, idBase) {
     </div>
   `;
 
-  montarOpcoes(idBase + '-carbo', CARBO_GRANDE, dadosRefeicao.carboidrato.item, totalKcalCarbo, 'carbo-grande', idBase);
-  montarOpcoes(idBase + '-proteina', PROTEINA_GRANDE, dadosRefeicao.proteina.item, totalKcalProteina, 'proteina-grande', idBase);
-
   return div;
 }
 
@@ -646,9 +645,6 @@ function criarRefeicaoPeriferica(titulo, icone, dadosRefeicao, idBase) {
       <div class="opcoes-troca" id="opcoes-${idBase}-recheio"></div>
     </div>
   `;
-
-  montarOpcoes(idBase + '-carbo', CARBO_PERIFERICO, dadosRefeicao.carboidrato.item, totalKcalCarbo, 'carbo-periferico', idBase);
-  montarOpcoes(idBase + '-recheio', RECHEIO_PERIFERICO, dadosRefeicao.recheio.item, totalKcalRecheio, 'recheio', idBase);
 
   return div;
 }
@@ -684,10 +680,40 @@ function criarLancheManha(titulo, icone, dadosRefeicao) {
   const bancoFrutas = {};
   Object.keys(FRUTAS).forEach(f => { bancoFrutas[f] = { kcalPor100g: FRUTAS[f] }; });
 
-  montarOpcoes(idBase + '-fruta', bancoFrutas, dadosRefeicao.fruta.item, totalKcalFruta, 'fruta', idBase);
-  montarOpcoes(idBase + '-aveia', AVEIA_OU_LEITE, dadosRefeicao.aveia.item, totalKcalAveia, 'aveia', idBase);
-
   return div;
+}
+
+// Roda DEPOIS que todos os blocos de refeição já foram inseridos na página,
+// evitando o erro de tentar preencher um elemento que ainda não existe no DOM.
+function inicializarOpcoes(p) {
+  const totalKcalCarboAlmoco = (p.almoco.carboidrato.arrozG * KCAL_ARROZ / 100) + (p.almoco.carboidrato.feijaoG * KCAL_FEIJAO / 100);
+  const totalKcalProteinaAlmoco = p.almoco.proteina.gramas * (PROTEINA_GRANDE[p.almoco.proteina.item] || { kcalPor100g: 165 }).kcalPor100g / 100;
+  montarOpcoes('almoco-carbo', CARBO_GRANDE, p.almoco.carboidrato.item, totalKcalCarboAlmoco, 'carbo-grande', 'almoco');
+  montarOpcoes('almoco-proteina', PROTEINA_GRANDE, p.almoco.proteina.item, totalKcalProteinaAlmoco, 'proteina-grande', 'almoco');
+
+  const totalKcalCarboJanta = (p.janta.carboidrato.arrozG * KCAL_ARROZ / 100) + (p.janta.carboidrato.feijaoG * KCAL_FEIJAO / 100);
+  const totalKcalProteinaJanta = p.janta.proteina.gramas * (PROTEINA_GRANDE[p.janta.proteina.item] || { kcalPor100g: 165 }).kcalPor100g / 100;
+  montarOpcoes('janta-carbo', CARBO_GRANDE, p.janta.carboidrato.item, totalKcalCarboJanta, 'carbo-grande', 'janta');
+  montarOpcoes('janta-proteina', PROTEINA_GRANDE, p.janta.proteina.item, totalKcalProteinaJanta, 'proteina-grande', 'janta');
+
+  const totalKcalCarboCafe = p.cafeDaManha.carboidrato.gramas * (CARBO_PERIFERICO[p.cafeDaManha.carboidrato.item] || { kcalPor100g: 300 }).kcalPor100g / 100;
+  const totalKcalRecheioCafe = p.cafeDaManha.recheio.gramas * (RECHEIO_PERIFERICO[p.cafeDaManha.recheio.item] || { kcalPor100g: 165 }).kcalPor100g / 100;
+  montarOpcoes('cafeDaManha-carbo', CARBO_PERIFERICO, p.cafeDaManha.carboidrato.item, totalKcalCarboCafe, 'carbo-periferico', 'cafeDaManha');
+  montarOpcoes('cafeDaManha-recheio', RECHEIO_PERIFERICO, p.cafeDaManha.recheio.item, totalKcalRecheioCafe, 'recheio', 'cafeDaManha');
+
+  const totalKcalCarboLancheTarde = p.lancheDaTarde.carboidrato.gramas * (CARBO_PERIFERICO[p.lancheDaTarde.carboidrato.item] || { kcalPor100g: 300 }).kcalPor100g / 100;
+  const totalKcalRecheioLancheTarde = p.lancheDaTarde.recheio.gramas * (RECHEIO_PERIFERICO[p.lancheDaTarde.recheio.item] || { kcalPor100g: 165 }).kcalPor100g / 100;
+  montarOpcoes('lancheDaTarde-carbo', CARBO_PERIFERICO, p.lancheDaTarde.carboidrato.item, totalKcalCarboLancheTarde, 'carbo-periferico', 'lancheDaTarde');
+  montarOpcoes('lancheDaTarde-recheio', RECHEIO_PERIFERICO, p.lancheDaTarde.recheio.item, totalKcalRecheioLancheTarde, 'recheio', 'lancheDaTarde');
+
+  const kcalFrutaBase = FRUTAS[p.lancheDaManha.fruta.item] || 90;
+  const totalKcalFruta = p.lancheDaManha.fruta.gramas * kcalFrutaBase / 100;
+  const aveiaInfo = AVEIA_OU_LEITE[p.lancheDaManha.aveia.item] || AVEIA_OU_LEITE['Aveia em flocos'];
+  const totalKcalAveia = p.lancheDaManha.aveia.gramas * aveiaInfo.kcalPor100g / 100;
+  const bancoFrutas = {};
+  Object.keys(FRUTAS).forEach(f => { bancoFrutas[f] = { kcalPor100g: FRUTAS[f] }; });
+  montarOpcoes('lancheManha-fruta', bancoFrutas, p.lancheDaManha.fruta.item, totalKcalFruta, 'fruta', 'lancheManha');
+  montarOpcoes('lancheManha-aveia', AVEIA_OU_LEITE, p.lancheDaManha.aveia.item, totalKcalAveia, 'aveia', 'lancheManha');
 }
 
 // ============================================================
