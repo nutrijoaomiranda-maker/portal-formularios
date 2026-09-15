@@ -9,14 +9,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-primary: #0B1E33;
-    --bg-panel: #12233B;
-    --bg-panel-alt: #16304F;
+    --bg-primary: #FFFFFF;
+    --bg-panel: #F5F8FC;
+    --bg-panel-alt: #EAF0F7;
+    --blue: #0B3D66;
+    --blue-deep: #082C4A;
     --accent: #D9A441;
-    --accent-soft: #E8C77A;
-    --text-primary: #F3F1EA;
-    --text-muted: #93A6BC;
-    --border: rgba(255,255,255,0.09);
+    --accent-soft: #F0CB80;
+    --accent-text: #9C6E1E;
+    --text-primary: #16283D;
+    --text-muted: #64778C;
+    --border: rgba(11,61,102,0.12);
     --font-display: 'Oswald', sans-serif;
     --font-body: 'Inter', sans-serif;
   }
@@ -25,7 +28,7 @@
 
   body {
     margin: 0;
-    background: linear-gradient(180deg, #0B1E33 0%, #091829 100%);
+    background: #FFFFFF;
     color: var(--text-primary);
     font-family: var(--font-body);
     line-height: 1.5;
@@ -36,10 +39,10 @@
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: 0.04em;
-    color: var(--text-primary);
+    color: var(--blue);
     font-size: 1.05rem;
   }
-  .wordmark span { color: var(--accent); }
+  .wordmark span { color: var(--accent-text); }
 
   header {
     padding: 22px 24px;
@@ -125,7 +128,7 @@
     font-weight: 600;
     margin: 0 0 4px;
   }
-  .saudacao .accent { color: var(--accent); }
+  .saudacao .accent { color: var(--blue); }
 
   .subtitulo {
     color: var(--text-muted);
@@ -146,7 +149,7 @@
     font-family: var(--font-display);
     font-size: 2.4rem;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--blue);
     line-height: 1;
   }
   .stat.principal .valor { font-size: 3rem; }
@@ -168,10 +171,10 @@
   .refeicao {
     display: flex;
     gap: 18px;
-    border-left: 3px solid var(--accent);
+    border-left: 3px solid var(--blue);
     background: var(--bg-panel);
     padding: 20px 22px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     border-radius: 0 6px 6px 0;
   }
 
@@ -180,7 +183,7 @@
     width: 30px;
     height: 30px;
     margin-top: 2px;
-    color: var(--accent);
+    color: var(--blue);
   }
   .refeicao .icone svg { width: 100%; height: 100%; }
 
@@ -190,6 +193,7 @@
     font-weight: 600;
     margin: 0 0 10px;
     font-size: 1.05rem;
+    color: var(--blue);
   }
 
   .item-alimento {
@@ -197,13 +201,13 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 8px 0;
+    padding: 7px 0;
     flex-wrap: wrap;
   }
   .item-alimento + .item-alimento { border-top: 1px solid var(--border); }
 
   .item-alimento .desc { color: var(--text-primary); }
-  .item-alimento .desc .gramas { color: var(--accent-soft); font-weight: 600; }
+  .item-alimento .desc .gramas { color: var(--accent-text); font-weight: 700; }
 
   .btn-trocar {
     background: transparent;
@@ -241,9 +245,8 @@
   .opcao-pill.selecionada { background: var(--accent); color: #0B1E33; border-color: var(--accent); font-weight: 600; }
 
   .vegetais-nota {
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px dashed var(--border);
+    margin-top: 10px;
+    padding-top: 8px;
     color: var(--text-muted);
     font-size: 0.85rem;
   }
@@ -335,32 +338,33 @@
 
   .semana-caminhos {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
     margin-top: 16px;
-    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
   }
   .dia-caminho {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 6px;
+    justify-content: space-between;
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--border);
   }
-  .dia-caminho > span { font-size: 0.75rem; color: var(--text-muted); }
-  .dia-caminho-opcoes { display: flex; gap: 4px; }
+  .dia-caminho > span { font-size: 0.9rem; color: var(--text-primary); font-weight: 500; }
+  .dia-caminho-opcoes { display: flex; gap: 6px; }
   .btn-letra-caminho {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     border: 1px solid var(--border);
-    background: var(--bg-panel-alt);
+    background: #FFFFFF;
     color: var(--text-muted);
     font-family: var(--font-body);
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     font-weight: 600;
     cursor: pointer;
   }
-  .btn-letra-caminho:hover { border-color: var(--accent); }
-  .btn-letra-caminho.selecionada { background: var(--accent); color: #0B1E33; border-color: var(--accent); }
+  .btn-letra-caminho:hover { border-color: var(--blue); }
+  .btn-letra-caminho.selecionada { background: var(--blue); color: #FFFFFF; border-color: var(--blue); }
 
   footer {
     text-align: center;
@@ -368,6 +372,17 @@
     font-size: 0.8rem;
     padding: 30px 20px;
   }
+
+  .bloco-obs {
+    background: var(--bg-panel-alt);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  .bloco-obs strong { color: var(--text-primary); }
 
   @media (max-width: 480px) {
     .resumo-calorico { gap: 20px; }
@@ -433,16 +448,14 @@
         <span class="painel-seta">▾</span>
       </div>
       <div class="painel-corpo">
-        <p>Cada caminho é uma forma diferente de estruturar o seu dia alimentar. Leia as três opções abaixo e, no fim da semana, marque qual caminho você seguiu em cada dia.</p>
-        <div style="margin-bottom:18px;">
-          <p style="color:var(--text-primary); font-weight:600; margin-bottom:4px;">Caminho A</p>
-          <p style="margin-bottom:14px;"><em>Substitua este texto pela explicação real do Caminho A.</em></p>
-          <p style="color:var(--text-primary); font-weight:600; margin-bottom:4px;">Caminho B</p>
-          <p style="margin-bottom:14px;"><em>Substitua este texto pela explicação real do Caminho B.</em></p>
-          <p style="color:var(--text-primary); font-weight:600; margin-bottom:4px;">Caminho C</p>
-          <p style="margin-bottom:14px;"><em>Substitua este texto pela explicação real do Caminho C.</em></p>
-        </div>
-        <p style="color:var(--text-primary); font-weight:600; margin-top:8px;">Marque qual caminho você seguiu em cada dia:</p>
+        <p>Cada caminho é uma forma diferente de estruturar o seu dia alimentar. Leia as três opções e, no fim da semana, marque qual você seguiu em cada dia.</p>
+        <p style="color:var(--blue); font-weight:600; margin:16px 0 4px;">Caminho A</p>
+        <p><em>Substitua este texto pela explicação real do Caminho A.</em></p>
+        <p style="color:var(--blue); font-weight:600; margin:16px 0 4px;">Caminho B</p>
+        <p><em>Substitua este texto pela explicação real do Caminho B.</em></p>
+        <p style="color:var(--blue); font-weight:600; margin:16px 0 4px;">Caminho C</p>
+        <p><em>Substitua este texto pela explicação real do Caminho C.</em></p>
+        <p style="color:var(--text-primary); font-weight:600; margin-top:20px;">Marque qual caminho você seguiu em cada dia:</p>
         <div class="semana-caminhos" id="semana-caminhos"></div>
       </div>
     </div>
@@ -478,6 +491,10 @@
           <li>No dia seguinte, volte direto pro seu plano — um evento fora da rotina não desfaz o restante da semana.</li>
         </ul>
       </div>
+    </div>
+
+    <div class="bloco-obs">
+      <p><strong>OBS:</strong> os lanches são flexíveis. Se não fizer o lanche da manhã, some ele ao café da manhã. Se não fizer o lanche da tarde, faça em outro momento do dia ou some a outra refeição. O importante é bater o total do dia, não seguir o horário à risca.</p>
     </div>
 
   </section>
@@ -598,11 +615,11 @@ function renderizarPlano(dados) {
   const lista = document.getElementById('lista-refeicoes');
   lista.innerHTML = '';
 
-  lista.appendChild(criarRefeicaoGrande('Almoço', ICONES.prato, p.almoco, 'almoco'));
   lista.appendChild(criarRefeicaoPeriferica('Café da manhã', ICONES.sol, p.cafeDaManha, 'cafeDaManha'));
   lista.appendChild(criarLancheManha('Lanche da manhã', ICONES.maca, p.lancheDaManha));
+  lista.appendChild(criarRefeicaoGrande('Almoço', ICONES.prato, p.almoco, 'almoco'));
   lista.appendChild(criarRefeicaoPeriferica('Lanche da tarde', ICONES.xicara, p.lancheDaTarde, 'lancheDaTarde'));
-  lista.appendChild(criarRefeicaoGrande('Janta', ICONES.lua, p.janta, 'janta'));
+  lista.appendChild(criarRefeicaoGrande('Jantar', ICONES.lua, p.janta, 'janta'));
 
   inicializarOpcoes(p);
 
@@ -794,7 +811,7 @@ function mostrarCaminho(botao, letra) {
 }
 
 function montarSemanaCaminhos() {
-  const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+  const dias = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
   const letras = ['A', 'B', 'C'];
   const container = document.getElementById('semana-caminhos');
   if (!container) return;
