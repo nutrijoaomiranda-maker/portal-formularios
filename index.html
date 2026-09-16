@@ -571,6 +571,77 @@ const ICONES = {
 let planoAtual = null;
 
 // ============================================================
+// MEDIDA CASEIRA — converte gramas em medida caseira aproximada.
+// Pão é exibido SÓ em unidade (sem gramatura); os demais mostram
+// medida caseira + gramatura juntos.
+// ============================================================
+const MEDIDA_CASEIRA = {
+  'Arroz branco': { unidade: 'colher de sopa', gramasPorUnidade: 25, granularidade: 0.25 },
+  'Feijão carioca': { unidade: 'concha média', gramasPorUnidade: 100, granularidade: 0.25 },
+  'Somente arroz': { unidade: 'colher de sopa', gramasPorUnidade: 25, granularidade: 0.25 },
+  'Batata inglesa': { unidade: 'unidade média', gramasPorUnidade: 100, granularidade: 0.5 },
+  'Batata doce': { unidade: 'pedaço médio', gramasPorUnidade: 100, granularidade: 0.5 },
+  'Macarrão': { unidade: 'escumadeira', gramasPorUnidade: 100, granularidade: 0.25 },
+  'Purê de batata': { unidade: 'colher de sopa', gramasPorUnidade: 33, granularidade: 0.25 },
+  'Mandioca': { unidade: 'pedaço médio', gramasPorUnidade: 100, granularidade: 0.5 },
+  'Arroz integral': { unidade: 'colher de sopa', gramasPorUnidade: 25, granularidade: 0.25 },
+  'Cuscuz de milho': { unidade: 'colher de sopa', gramasPorUnidade: 25, granularidade: 0.25 },
+  'Frango grelhado': { unidade: 'filé médio', gramasPorUnidade: 100, granularidade: 0.5 },
+  'Bife grelhado': { unidade: 'bife médio', gramasPorUnidade: 100, granularidade: 0.5 },
+  'Carne moída': { unidade: 'colher de sopa', gramasPorUnidade: 25, granularidade: 0.25 },
+  'Peixe branco grelhado': { unidade: 'filé médio', gramasPorUnidade: 100, granularidade: 0.5 },
+  'Ovo cozido + azeite': { unidade: 'ovo', gramasPorUnidade: 52.5, granularidade: 0.5 },
+  'Pão francês': { unidade: 'unidade', gramasPorUnidade: 50, granularidade: 0.5, soUnidade: true },
+  'Pão de forma': { unidade: 'fatia', gramasPorUnidade: 25, granularidade: 0.5, soUnidade: true },
+  'Pão integral': { unidade: 'fatia', gramasPorUnidade: 25, granularidade: 0.5, soUnidade: true },
+  'Tapioca': { unidade: 'colher de sopa de goma', gramasPorUnidade: 20, granularidade: 0.25 },
+  'Ovo mexido': { unidade: 'ovo', gramasPorUnidade: 50, granularidade: 0.5 },
+  'Queijo muçarela': { unidade: 'fatia', gramasPorUnidade: 20, granularidade: 0.5 },
+  'Queijo prato': { unidade: 'fatia', gramasPorUnidade: 20, granularidade: 0.5 },
+  'Requeijão light': { unidade: 'colher de sopa', gramasPorUnidade: 20, granularidade: 0.25 },
+  'Aveia em flocos': { unidade: 'colher de sopa', gramasPorUnidade: 10, granularidade: 0.25 },
+  'Leite desnatado': { unidade: 'ml', gramasPorUnidade: 1, semFracao: true },
+  'Banana': { unidade: 'unidade média', gramasPorUnidade: 100, granularidade: 0.5 },
+  'Maçã': { unidade: 'unidade grande', gramasPorUnidade: 160, granularidade: 0.5 },
+  'Manga': { unidade: 'unidade pequena', gramasPorUnidade: 150, granularidade: 0.5 },
+  'Uva': { unidade: 'xícara', gramasPorUnidade: 170, granularidade: 0.25 },
+  'Pera': { unidade: 'unidade grande', gramasPorUnidade: 170, granularidade: 0.5 },
+  'Kiwi': { unidade: 'unidade', gramasPorUnidade: 87.5, granularidade: 0.5 },
+  'Abacaxi': { unidade: 'fatia', gramasPorUnidade: 95, granularidade: 0.5 },
+  'Laranja': { unidade: 'unidade grande', gramasPorUnidade: 200, granularidade: 0.5 },
+  'Mamão': { unidade: 'fatia (papaia)', gramasPorUnidade: 225, granularidade: 0.5 },
+  'Tangerina': { unidade: 'unidade', gramasPorUnidade: 112.5, granularidade: 0.5 },
+  'Melancia': { unidade: 'fatia', gramasPorUnidade: 135, granularidade: 0.5 },
+  'Melão': { unidade: 'fatia', gramasPorUnidade: 155, granularidade: 0.5 },
+  'Morango': { unidade: 'unidade', gramasPorUnidade: 20, granularidade: 0.5 }
+};
+
+function formatarFracao(qtd) {
+  if (qtd <= 0) return '0';
+  const inteiro = Math.floor(qtd);
+  const fracao = Math.round((qtd - inteiro) * 4) / 4;
+  const simbolos = { 0.25: '¼', 0.5: '½', 0.75: '¾' };
+  if (fracao === 0) return String(inteiro || 1);
+  if (fracao === 1) return String(inteiro + 1);
+  return (inteiro > 0 ? inteiro : '') + simbolos[fracao];
+}
+
+function formatarMedidaCaseira(nomeItem, gramas) {
+  const m = MEDIDA_CASEIRA[nomeItem];
+  if (!m) return gramas + 'g';
+  if (m.semFracao) return Math.round(gramas) + m.unidade;
+
+  const granularidade = m.granularidade || 0.25;
+  let qtd = Math.round((gramas / m.gramasPorUnidade) / granularidade) * granularidade;
+  if (qtd < granularidade) qtd = granularidade;
+
+  const qtdTexto = formatarFracao(qtd);
+  const rotulo = qtdTexto + ' ' + m.unidade;
+
+  return m.soUnidade ? rotulo : (rotulo + ' (' + Math.round(gramas) + 'g)');
+}
+
+// ============================================================
 // BUSCA DO PLANO
 // ============================================================
 async function buscarPlano() {
@@ -645,13 +716,13 @@ function criarRefeicaoGrande(titulo, icone, dadosRefeicao, idBase) {
     <div class="corpo">
       <p class="nome-refeicao">${titulo}</p>
       <div class="item-alimento" data-tipo="carbo-grande" data-id="${idBase}" data-kcal="${totalKcalCarbo}">
-        <span class="desc" id="desc-${idBase}-carbo">Arroz branco <span class="gramas">${dadosRefeicao.carboidrato.arrozG}g</span> + Feijão carioca <span class="gramas">${dadosRefeicao.carboidrato.feijaoG}g</span></span>
+        <span class="desc" id="desc-${idBase}-carbo">Arroz branco <span class="gramas">${formatarMedidaCaseira('Arroz branco', dadosRefeicao.carboidrato.arrozG)}</span> + Feijão carioca <span class="gramas">${formatarMedidaCaseira('Feijão carioca', dadosRefeicao.carboidrato.feijaoG)}</span></span>
         <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-carbo')">Trocar</button>
       </div>
       <div class="opcoes-troca" id="opcoes-${idBase}-carbo"></div>
 
       <div class="item-alimento" data-tipo="proteina-grande" data-id="${idBase}" data-kcal="${totalKcalProteina}">
-        <span class="desc" id="desc-${idBase}-proteina">${dadosRefeicao.proteina.item} <span class="gramas">${dadosRefeicao.proteina.gramas}g</span></span>
+        <span class="desc" id="desc-${idBase}-proteina">${dadosRefeicao.proteina.item} <span class="gramas">${formatarMedidaCaseira(dadosRefeicao.proteina.item, dadosRefeicao.proteina.gramas)}</span></span>
         <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-proteina')">Trocar</button>
       </div>
       <div class="opcoes-troca" id="opcoes-${idBase}-proteina"></div>
@@ -677,13 +748,13 @@ function criarRefeicaoPeriferica(titulo, icone, dadosRefeicao, idBase) {
     <div class="corpo">
       <p class="nome-refeicao">${titulo}</p>
       <div class="item-alimento" data-tipo="carbo-periferico" data-id="${idBase}" data-kcal="${totalKcalCarbo}">
-        <span class="desc" id="desc-${idBase}-carbo">${dadosRefeicao.carboidrato.item} <span class="gramas">${dadosRefeicao.carboidrato.gramas}g</span></span>
+        <span class="desc" id="desc-${idBase}-carbo">${dadosRefeicao.carboidrato.item} <span class="gramas">${formatarMedidaCaseira(dadosRefeicao.carboidrato.item, dadosRefeicao.carboidrato.gramas)}</span></span>
         <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-carbo')">Trocar</button>
       </div>
       <div class="opcoes-troca" id="opcoes-${idBase}-carbo"></div>
 
       <div class="item-alimento" data-tipo="recheio" data-id="${idBase}" data-kcal="${totalKcalRecheio}">
-        <span class="desc" id="desc-${idBase}-recheio">${dadosRefeicao.recheio.item} <span class="gramas">${dadosRefeicao.recheio.gramas}g</span></span>
+        <span class="desc" id="desc-${idBase}-recheio">${dadosRefeicao.recheio.item} <span class="gramas">${formatarMedidaCaseira(dadosRefeicao.recheio.item, dadosRefeicao.recheio.gramas)}</span></span>
         <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-recheio')">Trocar</button>
       </div>
       <div class="opcoes-troca" id="opcoes-${idBase}-recheio"></div>
@@ -708,13 +779,13 @@ function criarLancheManha(titulo, icone, dadosRefeicao) {
     <div class="corpo">
       <p class="nome-refeicao">${titulo}</p>
       <div class="item-alimento" data-tipo="fruta" data-id="${idBase}" data-kcal="${totalKcalFruta}">
-        <span class="desc" id="desc-${idBase}-fruta">${dadosRefeicao.fruta.item} <span class="gramas">${dadosRefeicao.fruta.gramas}g</span></span>
+        <span class="desc" id="desc-${idBase}-fruta">${dadosRefeicao.fruta.item} <span class="gramas">${formatarMedidaCaseira(dadosRefeicao.fruta.item, dadosRefeicao.fruta.gramas)}</span></span>
         <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-fruta')">Trocar</button>
       </div>
       <div class="opcoes-troca" id="opcoes-${idBase}-fruta"></div>
 
       <div class="item-alimento" data-tipo="aveia" data-id="${idBase}" data-kcal="${totalKcalAveia}">
-        <span class="desc" id="desc-${idBase}-aveia">${dadosRefeicao.aveia.item} <span class="gramas">${dadosRefeicao.aveia.gramas}g</span></span>
+        <span class="desc" id="desc-${idBase}-aveia">${dadosRefeicao.aveia.item} <span class="gramas">${formatarMedidaCaseira(dadosRefeicao.aveia.item, dadosRefeicao.aveia.gramas)}</span></span>
         <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-aveia')">Trocar</button>
       </div>
       <div class="opcoes-troca" id="opcoes-${idBase}-aveia"></div>
@@ -790,13 +861,13 @@ function selecionarOpcao(chaveDom, nomeItem, banco, kcalAlvo, tipo, idBase) {
     const kcalFeijaoAlvo = kcalAlvo * 0.38;
     const arrozG = Math.round((kcalArrozAlvo / KCAL_ARROZ) * 100);
     const feijaoG = Math.round((kcalFeijaoAlvo / KCAL_FEIJAO) * 100);
-    descEl.innerHTML = `Arroz branco <span class="gramas">${arrozG}g</span> + Feijão carioca <span class="gramas">${feijaoG}g</span>`;
+    descEl.innerHTML = `Arroz branco <span class="gramas">${formatarMedidaCaseira('Arroz branco', arrozG)}</span> + Feijão carioca <span class="gramas">${formatarMedidaCaseira('Feijão carioca', feijaoG)}</span>`;
     return;
   }
 
   const info = banco[nomeItem];
   const novaGramatura = Math.round((kcalAlvo / info.kcalPor100g) * 100);
-  descEl.innerHTML = `${nomeItem} <span class="gramas">${novaGramatura}g</span>`;
+  descEl.innerHTML = `${nomeItem} <span class="gramas">${formatarMedidaCaseira(nomeItem, novaGramatura)}</span>`;
 }
 
 // ============================================================
