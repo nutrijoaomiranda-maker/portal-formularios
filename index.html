@@ -384,6 +384,18 @@
   }
   .bloco-obs strong { color: var(--text-primary); }
 
+  .lista-vegetais {
+    background: var(--bg-panel-alt);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .lista-vegetais p { margin: 0 0 6px; }
+  .lista-vegetais p:last-child { margin-bottom: 0; }
+  .lista-vegetais strong { color: var(--blue); }
+
   @media (max-width: 480px) {
     .resumo-calorico { gap: 20px; }
     .stat .valor { font-size: 2rem; }
@@ -437,6 +449,10 @@
     </div>
 
     <h2 class="secao-titulo">Suas refeições</h2>
+    <div class="lista-vegetais">
+      <p><strong>Vegetais Grupo A</strong> (à vontade): alface, rúcula, agrião, espinafre, acelga, repolho, pepino, tomate, rabanete, abobrinha, berinjela, cogumelo, brócolis, couve-flor, vagem, aspargo.</p>
+      <p><strong>Vegetais Grupo B</strong> (à vontade): cenoura, beterraba, chuchu, abóbora, palmito, jiló, quiabo.</p>
+    </div>
     <div id="lista-refeicoes"></div>
 
     <h2 class="secao-titulo" style="margin-top:36px;">Mais para você</h2>
@@ -564,7 +580,8 @@ const AVEIA_OU_LEITE = {
   'Leite desnatado': { kcalPor100g: 35 }
 };
 
-const KCAL_ARROZ = 128, KCAL_FEIJAO = 76;
+const KCAL_ARROZ = 128, KCAL_FEIJAO = 76, KCAL_AZEITE_POR_GRAMA = 9;
+const SPLIT_GRANDE = { carboidrato: 0.575, proteina: 0.225, gordura: 0.20 };
 
 const ICONES = {
   sol: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>',
@@ -605,6 +622,7 @@ const MEDIDA_CASEIRA = {
   'Queijo muçarela': { unidade: 'fatia', gramasPorUnidade: 20, granularidade: 0.5 },
   'Queijo prato': { unidade: 'fatia', gramasPorUnidade: 20, granularidade: 0.5 },
   'Requeijão light': { unidade: 'colher de sopa', gramasPorUnidade: 20, granularidade: 0.25 },
+  'Azeite de oliva extra virgem': { unidade: 'colher de sopa', gramasPorUnidade: 13.5, granularidade: 0.25 },
   'Aveia em flocos': { unidade: 'colher de sopa', gramasPorUnidade: 10, granularidade: 0.25 },
   'Leite desnatado': { unidade: 'ml', gramasPorUnidade: 1, semFracao: true },
   'Banana': { unidade: 'unidade média', gramasPorUnidade: 100, granularidade: 0.5 },
@@ -732,6 +750,10 @@ function criarRefeicaoGrande(titulo, icone, dadosRefeicao, idBase) {
         <button class="btn-trocar" onclick="alternarOpcoes('${idBase}-proteina')">Trocar</button>
       </div>
       <div class="opcoes-troca" id="opcoes-${idBase}-proteina"></div>
+
+      <div class="item-alimento">
+        <span class="desc">${dadosRefeicao.gordura.item} <span class="gramas">${formatarMedidaCaseira(dadosRefeicao.gordura.item, dadosRefeicao.gordura.gramas)}</span></span>
+      </div>
 
       <div class="vegetais-nota">+ Vegetais à vontade (Grupo A e B)</div>
     </div>
