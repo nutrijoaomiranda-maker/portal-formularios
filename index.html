@@ -135,6 +135,101 @@
     margin: 0 0 32px;
   }
 
+  /* ---------- TAB BAR (navegação tipo app) ---------- */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-panel-alt);
+    padding: 4px;
+    border-radius: 12px;
+    margin-bottom: 28px;
+  }
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 11px 0;
+    border-radius: 9px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .tab-btn.ativo {
+    background: #FFFFFF;
+    color: var(--blue);
+    box-shadow: 0 1px 3px rgba(11,61,102,0.14);
+  }
+
+  .aba-conteudo { display: none; }
+  .aba-conteudo.ativa { display: block; }
+
+  /* ---------- CARD RESUMO COM ANEL DE PROGRESSO ---------- */
+  .card-resumo {
+    background: #FFFFFF;
+    border-radius: 18px;
+    box-shadow: 0 2px 10px rgba(11,61,102,0.09), 0 1px 3px rgba(11,61,102,0.06);
+    padding: 32px 26px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .anel-progresso {
+    position: relative;
+    width: 190px;
+    height: 190px;
+  }
+  .anel-progresso svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .anel-fundo { fill: none; stroke: var(--bg-panel-alt); stroke-width: 10; }
+  .anel-frente {
+    fill: none;
+    stroke: var(--blue);
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 327;
+    stroke-dashoffset: 327;
+    transition: stroke-dashoffset 0.8s ease;
+  }
+  .anel-texto {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .anel-valor {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--blue);
+    line-height: 1;
+  }
+  .anel-rotulo { color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; }
+
+  .stats-secundarios {
+    display: flex;
+    gap: 14px;
+    width: 100%;
+  }
+  .stat-pill {
+    flex: 1;
+    background: var(--bg-panel);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .stat-pill-valor {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--blue);
+  }
+  .stat-pill-rotulo { color: var(--text-muted); font-size: 0.78rem; margin-top: 2px; }
+
   .resumo-calorico {
     display: flex;
     gap: 28px;
@@ -170,19 +265,21 @@
   /* ---------- REFEIÇÕES ---------- */
   .refeicao {
     display: flex;
-    gap: 18px;
-    border-left: 3px solid var(--blue);
-    background: var(--bg-panel);
+    gap: 16px;
+    background: #FFFFFF;
+    box-shadow: 0 1px 4px rgba(11,61,102,0.08), 0 1px 2px rgba(11,61,102,0.05);
     padding: 20px 22px;
-    margin-bottom: 12px;
-    border-radius: 0 6px 6px 0;
+    margin-bottom: 14px;
+    border-radius: 16px;
   }
 
   .refeicao .icone {
     flex-shrink: 0;
-    width: 30px;
-    height: 30px;
-    margin-top: 2px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    border-radius: 50%;
+    background: var(--bg-panel-alt);
     color: var(--blue);
   }
   .refeicao .icone svg { width: 100%; height: 100%; }
@@ -253,9 +350,9 @@
 
   /* ---------- SEÇÕES EXPANSÍVEIS ---------- */
   .painel-expansivel {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    background: #FFFFFF;
+    box-shadow: 0 1px 4px rgba(11,61,102,0.08), 0 1px 2px rgba(11,61,102,0.05);
+    border-radius: 16px;
     margin-bottom: 14px;
     overflow: hidden;
   }
@@ -431,31 +528,50 @@
   <section id="conteudo-principal">
 
     <p class="saudacao">Olá, <span class="accent" id="nome-cliente"></span></p>
-    <p class="subtitulo">Aqui está o seu plano, calculado sob medida.</p>
 
-    <div class="resumo-calorico">
-      <div class="stat principal">
-        <div class="valor" id="valor-meta">—</div>
-        <div class="rotulo">Meta calórica diária</div>
-      </div>
-      <div class="stat">
-        <div class="valor" id="valor-tmb">—</div>
-        <div class="rotulo">Taxa metabólica basal</div>
-      </div>
-      <div class="stat">
-        <div class="valor" id="valor-get">—</div>
-        <div class="rotulo">Gasto energético total</div>
+    <div class="tab-bar">
+      <button class="tab-btn ativo" data-aba="resumo" onclick="mostrarAba('resumo')">Resumo</button>
+      <button class="tab-btn" data-aba="refeicoes" onclick="mostrarAba('refeicoes')">Refeições</button>
+      <button class="tab-btn" data-aba="extras" onclick="mostrarAba('extras')">Extras</button>
+    </div>
+
+    <!-- ABA RESUMO -->
+    <div class="aba-conteudo ativa" id="aba-resumo">
+      <div class="card-resumo">
+        <div class="anel-progresso">
+          <svg viewBox="0 0 120 120">
+            <circle class="anel-fundo" cx="60" cy="60" r="52"/>
+            <circle class="anel-frente" id="anel-meta" cx="60" cy="60" r="52"/>
+          </svg>
+          <div class="anel-texto">
+            <div class="anel-valor" id="valor-meta">—</div>
+            <div class="anel-rotulo">kcal / dia</div>
+          </div>
+        </div>
+        <div class="stats-secundarios">
+          <div class="stat-pill">
+            <div class="stat-pill-valor" id="valor-tmb">—</div>
+            <div class="stat-pill-rotulo">Taxa metabólica basal</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-pill-valor" id="valor-get">—</div>
+            <div class="stat-pill-rotulo">Gasto energético total</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <h2 class="secao-titulo">Suas refeições</h2>
-    <div class="lista-vegetais">
-      <p><strong>Vegetais Grupo A</strong> (à vontade): alface, rúcula, agrião, espinafre, acelga, repolho, pepino, tomate, rabanete, abobrinha, berinjela, cogumelo, brócolis, couve-flor, vagem, aspargo.</p>
-      <p><strong>Vegetais Grupo B</strong> (à vontade): cenoura, beterraba, chuchu, abóbora, palmito, jiló, quiabo.</p>
+    <!-- ABA REFEIÇÕES -->
+    <div class="aba-conteudo" id="aba-refeicoes">
+      <div class="lista-vegetais">
+        <p><strong>Vegetais Grupo A</strong> (à vontade): alface, rúcula, agrião, espinafre, acelga, repolho, pepino, tomate, rabanete, abobrinha, berinjela, cogumelo, brócolis, couve-flor, vagem, aspargo.</p>
+        <p><strong>Vegetais Grupo B</strong> (à vontade): cenoura, beterraba, chuchu, abóbora, palmito, jiló, quiabo.</p>
+      </div>
+      <div id="lista-refeicoes"></div>
     </div>
-    <div id="lista-refeicoes"></div>
 
-    <h2 class="secao-titulo" style="margin-top:36px;">Mais para você</h2>
+    <!-- ABA EXTRAS -->
+    <div class="aba-conteudo" id="aba-extras">
 
     <!-- OS TRÊS CAMINHOS -->
     <div class="painel-expansivel" id="painel-caminhos">
@@ -518,6 +634,9 @@
     <div class="bloco-obs">
       <p><strong>OBS:</strong> os lanches são flexíveis. Se não fizer o lanche da manhã, some ele ao café da manhã. Se não fizer o lanche da tarde, faça em outro momento do dia ou some a outra refeição. O importante é bater o total do dia, não seguir o horário à risca.</p>
     </div>
+
+    </div>
+    <!-- fim da aba extras -->
 
   </section>
 </main>
@@ -702,9 +821,13 @@ async function buscarPlano() {
 // ============================================================
 function renderizarPlano(dados) {
   document.getElementById('nome-cliente').textContent = (dados.nome || '').split(' ')[0];
-  document.getElementById('valor-meta').textContent = Math.round(dados.metaCalorica) + ' kcal';
+  document.getElementById('valor-meta').textContent = Math.round(dados.metaCalorica);
   document.getElementById('valor-tmb').textContent = Math.round(dados.tmb);
   document.getElementById('valor-get').textContent = Math.round(dados.get);
+
+  const fracaoAnel = Math.max(0, Math.min(1, dados.metaCalorica / dados.get));
+  const circunferencia = 327;
+  document.getElementById('anel-meta').style.strokeDashoffset = circunferencia * (1 - fracaoAnel);
 
   const p = dados.prescricao;
   const lista = document.getElementById('lista-refeicoes');
@@ -901,6 +1024,11 @@ function selecionarOpcao(chaveDom, nomeItem, banco, kcalAlvo, tipo, idBase) {
 // ============================================================
 // PAINÉIS EXPANSÍVEIS / TRÊS CAMINHOS
 // ============================================================
+function mostrarAba(nome) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('ativo', b.dataset.aba === nome));
+  document.querySelectorAll('.aba-conteudo').forEach(a => a.classList.toggle('ativa', a.id === 'aba-' + nome));
+}
+
 function alternarPainel(id) {
   document.getElementById(id).classList.toggle('aberto');
 }
