@@ -858,6 +858,8 @@ function criarRefeicaoGrande(titulo, icone, dadosRefeicao, idBase) {
   const proteinaInfo = PROTEINA_GRANDE[dadosRefeicao.proteina.item] || { kcalPor100g: 165 };
   const totalKcalProteina = dadosRefeicao.proteina.gramas * proteinaInfo.kcalPor100g / 100;
 
+  const gorduraInfo = dadosRefeicao.gordura || { item: 'Azeite de oliva extra virgem', gramas: 0 };
+
   div.innerHTML = `
     <div class="icone">${icone}</div>
     <div class="corpo">
@@ -875,7 +877,7 @@ function criarRefeicaoGrande(titulo, icone, dadosRefeicao, idBase) {
       <div class="opcoes-troca" id="opcoes-${idBase}-proteina"></div>
 
       <div class="item-alimento">
-        <span class="desc">${dadosRefeicao.gordura.item} <span class="gramas">${formatarMedidaCaseira(dadosRefeicao.gordura.item, dadosRefeicao.gordura.gramas)}</span></span>
+        <span class="desc">${gorduraInfo.item} <span class="gramas">${formatarMedidaCaseira(gorduraInfo.item, gorduraInfo.gramas)}</span></span>
       </div>
 
       <div class="vegetais-nota">+ Vegetais à vontade (Grupo A e B)</div>
