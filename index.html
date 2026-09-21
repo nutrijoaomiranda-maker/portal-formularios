@@ -503,6 +503,13 @@
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
   }
+
+  @media print {
+    .tab-bar, .btn-trocar, .opcoes-troca, header, #tela-codigo { display: none !important; }
+    .aba-conteudo { display: block !important; margin-bottom: 24px; }
+    .refeicao, .painel-expansivel, .card-resumo { box-shadow: none !important; border: 1px solid #ddd; }
+    body { background: #fff; }
+  }
 </style>
 </head>
 <body>
@@ -533,6 +540,7 @@
       <button class="tab-btn ativo" data-aba="resumo" onclick="mostrarAba('resumo')">Resumo</button>
       <button class="tab-btn" data-aba="refeicoes" onclick="mostrarAba('refeicoes')">Refeições</button>
       <button class="tab-btn" data-aba="extras" onclick="mostrarAba('extras')">Extras</button>
+      <button class="tab-btn" data-aba="bonus" onclick="mostrarAba('bonus')">Bônus</button>
     </div>
 
     <!-- ABA RESUMO -->
@@ -613,6 +621,26 @@
       </div>
     </div>
 
+    <!-- ATIVIDADE FÍSICA -->
+    <div class="painel-expansivel" id="painel-treino">
+      <div class="painel-cabecalho" onclick="alternarPainel('painel-treino')">
+        <h3>Guia de atividade física</h3>
+        <span class="painel-seta">▾</span>
+      </div>
+      <div class="painel-corpo">
+        <p><em>Modelo padrão para iniciantes — substitua por seu método/planilha de treino, se preferir.</em></p>
+        <p>Se você ainda não treina, comece com 3 dias por semana (ex: segunda, quarta e sexta), 30-40 minutos por sessão:</p>
+        <ul>
+          <li><strong>Dia 1 — Corpo inteiro:</strong> agachamento, flexão (ou apoio no joelho), remada com elástico ou halteres, prancha.</li>
+          <li><strong>Dia 2 — Caminhada ou cardio leve:</strong> 30-40 minutos em ritmo confortável.</li>
+          <li><strong>Dia 3 — Corpo inteiro:</strong> afundo, elevação pélvica, remada, abdominal.</li>
+        </ul>
+        <p>O objetivo nas primeiras semanas é criar o hábito, não a intensidade. Aumente carga e dificuldade aos poucos.</p>
+        <p style="color:var(--text-primary); font-weight:600; margin-top:18px;">Marque os dias em que você treinou:</p>
+        <div class="semana-hidratacao" id="semana-treino"></div>
+      </div>
+    </div>
+
     <!-- CHURRASCO / HAPPY HOUR -->
     <div class="painel-expansivel" id="painel-churrasco">
       <div class="painel-cabecalho" onclick="alternarPainel('painel-churrasco')">
@@ -637,6 +665,29 @@
 
     </div>
     <!-- fim da aba extras -->
+
+    <!-- ABA BÔNUS -->
+    <div class="aba-conteudo" id="aba-bonus">
+      <div class="painel-expansivel aberto">
+        <div class="painel-cabecalho" style="cursor:default;">
+          <h3>Lista de compras da semana</h3>
+        </div>
+        <div class="painel-corpo" style="display:block;">
+          <p>Quantidade aproximada pra 7 dias, baseada no seu plano padrão (se você trocar itens na aba Refeições, ajuste a lista manualmente).</p>
+          <div id="lista-compras"></div>
+        </div>
+      </div>
+
+      <div class="painel-expansivel aberto">
+        <div class="painel-cabecalho" style="cursor:default;">
+          <h3>Salvar seu plano</h3>
+        </div>
+        <div class="painel-corpo" style="display:block;">
+          <p>Baixe ou imprima uma versão limpa do seu plano completo, pra guardar no celular ou colar na geladeira.</p>
+          <button class="btn-primario" onclick="window.print()">Baixar / Imprimir (PDF)</button>
+        </div>
+      </div>
+    </div>
 
   </section>
 </main>
@@ -847,6 +898,8 @@ function renderizarPlano(dados) {
     (metaMl / 1000).toFixed(1).replace('.', ',') + ' litros por dia';
   montarSemanaHidratacao();
   montarSemanaCaminhos();
+  montarSemanaTreino();
+  renderizarListaCompras(p);
 }
 
 function criarRefeicaoGrande(titulo, icone, dadosRefeicao, idBase) {
@@ -1110,7 +1163,76 @@ function montarSemanaHidratacao() {
   });
 }
 
-document.getElementById('input-codigo').addEventListener('keydown', function(e) {
+function montarSemanaTreino() {
+  const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+  const container = document.getElementById('semana-treino');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const codigo = (planoAtual && planoAtual.nome) ? planoAtual.nome : 'padrao';
+  const chaveArmazenamento = 'treino_' + codigo;
+  let salvo = {};
+  try { salvo = JSON.parse(localStorage.getItem(chaveArmazenamento)) || {}; } catch (e) { salvo = {}; }
+
+  dias.forEach((dia, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'dia-check';
+    const label = document.createElement('span');
+    label.textContent = dia;
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = !!salvo[i];
+    input.onchange = () => {
+      salvo[i] = input.checked;
+      localStorage.setItem(chaveArmazenamento, JSON.stringify(salvo));
+    };
+    wrapper.appendChild(input);
+    wrapper.appendChild(label);
+    container.appendChild(wrapper);
+  });
+}
+
+// ============================================================
+// LISTA DE COMPRAS SEMANAL (soma o plano padrão x 7 dias)
+// ============================================================
+function renderizarListaCompras(p) {
+  const DIAS = 7;
+  const itens = {};
+  function somar(nome, gramas) {
+    if (!nome) return;
+    itens[nome] = (itens[nome] || 0) + gramas;
+  }
+
+  somar(p.cafeDaManha.carboidrato.item, p.cafeDaManha.carboidrato.gramas * DIAS);
+  somar(p.cafeDaManha.recheio.item, p.cafeDaManha.recheio.gramas * DIAS);
+  somar(p.lancheDaManha.fruta.item, p.lancheDaManha.fruta.gramas * DIAS);
+  somar(p.lancheDaManha.aveia.item, p.lancheDaManha.aveia.gramas * DIAS);
+  somar('Arroz branco', p.almoco.carboidrato.arrozG * DIAS);
+  somar('Feijão carioca', p.almoco.carboidrato.feijaoG * DIAS);
+  somar(p.almoco.proteina.item, p.almoco.proteina.gramas * DIAS);
+  somar('Arroz branco', p.janta.carboidrato.arrozG * DIAS);
+  somar('Feijão carioca', p.janta.carboidrato.feijaoG * DIAS);
+  somar(p.janta.proteina.item, p.janta.proteina.gramas * DIAS);
+  somar(p.lancheDaTarde.carboidrato.item, p.lancheDaTarde.carboidrato.gramas * DIAS);
+  somar(p.lancheDaTarde.recheio.item, p.lancheDaTarde.recheio.gramas * DIAS);
+  if (p.almoco.gordura) somar(p.almoco.gordura.item, p.almoco.gordura.gramas * DIAS);
+  if (p.janta.gordura) somar(p.janta.gordura.item, p.janta.gordura.gramas * DIAS);
+
+  const container = document.getElementById('lista-compras');
+  if (!container) return;
+  container.innerHTML = '';
+  const ul = document.createElement('ul');
+  ul.style.paddingLeft = '20px';
+  Object.keys(itens).sort().forEach(nome => {
+    const li = document.createElement('li');
+    li.style.marginBottom = '6px';
+    const gramas = itens[nome];
+    const texto = gramas >= 1000 ? (gramas / 1000).toFixed(1).replace('.', ',') + ' kg' : Math.round(gramas) + 'g';
+    li.innerHTML = `<strong style="color:var(--text-primary);">${nome}</strong> — ${texto}`;
+    ul.appendChild(li);
+  });
+  container.appendChild(ul);
+}
   if (e.key === 'Enter') buscarPlano();
 });
 </script>
