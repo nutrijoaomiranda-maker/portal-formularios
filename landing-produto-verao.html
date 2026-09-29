@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shark Squad — Plano Personalizado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #FFFFFF;
+    --bg-panel: #F5F8FC;
+    --bg-panel-alt: #EAF0F7;
+    --blue: #0B3D66;
+    --blue-deep: #082C4A;
+    --accent: #D9A441;
+    --accent-soft: #F0CB80;
+    --accent-text: #9C6E1E;
+    --text-primary: #16283D;
+    --text-muted: #64778C;
+    --border: rgba(11,61,102,0.12);
+    --font-display: 'Oswald', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--text-primary); font-family: var(--font-body); line-height: 1.6; }
+  .wordmark { font-family: var(--font-display); font-weight: 700; letter-spacing: .04em; color: var(--blue); font-size: 1.05rem; }
+  .wordmark span { color: var(--accent-text); }
+  header { padding: 22px 24px; border-bottom: 1px solid var(--border); }
+  main { max-width: 640px; margin: 0 auto; padding: 0 20px 80px; }
+
+  .hero { padding: 48px 0 32px; }
+  .hero .tag { display:inline-block; background: var(--bg-panel-alt); color: var(--blue); font-size: .78rem; font-weight:600; padding: 6px 14px; border-radius: 20px; margin-bottom:18px; }
+  .hero h1 { font-family: var(--font-display); font-size: 2.1rem; font-weight: 700; margin: 0 0 14px; line-height:1.15; }
+  .hero p.sub { color: var(--text-muted); font-size: 1.05rem; margin: 0; }
+
+  .preco-card { background: var(--blue); color:#fff; border-radius: 18px; padding: 28px 26px; margin: 32px 0; text-align:center; }
+  .preco-card .valor { font-family: var(--font-display); font-size: 2.6rem; font-weight:700; }
+  .preco-card .comparativo { font-size: .85rem; color: rgba(255,255,255,0.75); margin-top: 6px; }
+  .btn-cta { display:block; width:100%; background: var(--accent); color: var(--blue-deep); text-decoration:none; text-align:center; font-weight:700; padding: 16px; border-radius: 10px; margin-top: 20px; font-size: 1.02rem; }
+
+  h2.secao { font-family: var(--font-display); font-size: 1.4rem; font-weight:600; margin: 44px 0 18px; }
+
+  .lista-beneficios { list-style:none; padding:0; margin:0; }
+  .lista-beneficios li { display:flex; gap:12px; padding: 12px 0; border-top: 1px solid var(--border); }
+  .lista-beneficios li:first-child { border-top:none; }
+  .lista-beneficios .check { color: var(--accent-text); font-weight:700; flex-shrink:0; }
+
+  .passo { display:flex; gap:16px; margin-bottom: 22px; }
+  .passo .num { font-family: var(--font-display); font-weight:700; color:#fff; background: var(--blue); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:.95rem; }
+  .passo .corpo strong { display:block; margin-bottom: 2px; }
+  .passo .corpo span { color: var(--text-muted); font-size: .92rem; }
+
+  .caixa-transparencia { background: var(--bg-panel-alt); border-radius: 12px; padding: 18px 20px; font-size: .92rem; color: var(--text-muted); margin-top: 14px; }
+  .caixa-transparencia strong { color: var(--text-primary); }
+
+  footer { text-align:center; color: var(--text-muted); font-size:.8rem; padding: 30px 20px; }
+</style>
+</head>
+<body>
+
+<header><div class="wordmark">SHARK<span>SQUAD</span></div></header>
+
+<main>
+  <div class="hero">
+    <span class="tag">Edição limitada</span>
+    <h1>Um plano alimentar sob medida, sem o compromisso de uma consultoria completa.</h1>
+    <p class="sub">Responda um formulário rápido e receba, na hora, um cardápio calculado especificamente pro seu corpo e objetivo — com liberdade pra trocar os alimentos do jeito que preferir.</p>
+  </div>
+
+  <div class="preco-card">
+    <div class="valor">R$ 110</div>
+    <div class="comparativo">O acompanhamento completo (trimestral) custa R$ 840 — esse é um ponto de entrada, não uma versão "capada" dele.</div>
+    <a href="https://wa.me/5531995289859?text=Oi!%20Quero%20garantir%20o%20meu%20plano%20personalizado." class="btn-cta">Quero o meu plano</a>
+  </div>
+
+  <h2 class="secao">O que você recebe</h2>
+  <ul class="lista-beneficios">
+    <li><span class="check">✓</span><span>Cálculo personalizado de gasto calórico (TMB e GET) a partir dos seus dados reais — não é um número genérico de tabela.</span></li>
+    <li><span class="check">✓</span><span>Cardápio completo com 5 refeições, já com as quantidades certas em medida caseira e em gramas.</span></li>
+    <li><span class="check">✓</span><span>Liberdade pra trocar qualquer alimento por outro do mesmo grupo, direto na tela, sem precisar me chamar.</span></li>
+    <li><span class="check">✓</span><span>Acesso pelo celular a qualquer hora, com um código só seu — sem precisar guardar PDF ou print.</span></li>
+    <li><span class="check">✓</span><span>Conteúdos extras: guia de hidratação, metodologia dos Três Caminhos, lista de compras da semana já pronta, e opção de baixar tudo em PDF.</span></li>
+  </ul>
+
+  <h2 class="secao">Como funciona, do pagamento ao acesso</h2>
+  <div class="passo">
+    <div class="num">1</div>
+    <div class="corpo"><strong>Você me chama no WhatsApp</strong><span>Envio um link de pagamento (Pix ou cartão) na hora, direto pelo chat.</span></div>
+  </div>
+  <div class="passo">
+    <div class="num">2</div>
+    <div class="corpo"><strong>Você preenche um formulário de 2 minutos</strong><span>Peso, altura, idade, rotina e objetivo — é só isso.</span></div>
+  </div>
+  <div class="passo">
+    <div class="num">3</div>
+    <div class="corpo"><strong>Seu plano é calculado automaticamente</strong><span>O sistema monta sua prescrição na hora, sob medida pros seus dados.</span></div>
+  </div>
+  <div class="passo">
+    <div class="num">4</div>
+    <div class="corpo"><strong>Você recebe um e-mail com seu código de acesso</strong><span>Junto com o link do portal, pra acessar quando quiser.</span></div>
+  </div>
+
+  <h2 class="secao">Pra quem é (e pra quem não é)</h2>
+  <div class="caixa-transparencia">
+    <p style="margin-top:0;"><strong>É pra você</strong> se quer uma estrutura clara pra seguir sozinho(a), sem precisar de consultas recorrentes, e prefere pagar menos por algo mais direto.</p>
+    <p style="margin-bottom:0;"><strong>Não é</strong> um substituto do acompanhamento completo: não inclui consulta, ajustes ao longo do tempo, nem suporte contínuo pelo WhatsApp. Se você já sabe que precisa de acompanhamento de perto, o pacote trimestral é o caminho certo — e esse plano pode ser um ótimo primeiro passo até lá.</p>
+  </div>
+
+  <a href="https://wa.me/5531995289859?text=Oi!%20Quero%20garantir%20o%20meu%20plano%20personalizado." class="btn-cta" style="margin-top:40px;">Quero o meu plano — R$ 110</a>
+</main>
+
+<footer>Shark Squad</footer>
+
+</body>
+</html>
